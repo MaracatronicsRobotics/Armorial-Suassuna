@@ -34,7 +34,7 @@ protected:
     void setStrategyState(AgressivityLevel gameState, StrategyState *strategyState);
 private:
     virtual void configure() = 0;
-    void runStrategy(AgressivityLevel agressivity);
+    void runStrategy(AgressivityLevel agressivity, bool param);
     QString state2str(AgressivityLevel gameState);
 };
 

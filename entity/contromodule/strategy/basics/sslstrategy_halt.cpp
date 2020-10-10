@@ -38,6 +38,10 @@ void SSLStrategy_Halt::configure(int numOurPlayers) {
 }
 
 void SSLStrategy_Halt::run(int numOurPlayers) {
+    if(getParam() == 1){
+        std::cout << "dale" << std::endl;
+    }
+
     quint8 goalie = dist()->getGK();
     if(PlayerBus::ourPlayerAvailable(goalie)){
         _pb_defense->addPlayer(goalie);

@@ -236,13 +236,14 @@ void Coach::run(){
 
     // get strategy
     Strategy *strat = strategy();
+    bool param = 0;
 
     // run strategy
     if(strat != NULL && getConstants()!=NULL){
         if(strat->isInitialized() == false){
             strat->initialize(_ref, _ourTeam, _theirTeam, _utils, getConstants());
         }
-        strat->runStrategy(agressivityToEnum(_lastAgressivity));
+        strat->runStrategy(AgressivityLevel(10), param);
     }
 }
 

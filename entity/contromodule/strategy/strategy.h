@@ -44,7 +44,7 @@ public:
     void initialize(SSLReferee *ref, MRCTeam *ourTeam, MRCTeam *theirTeam, CoachUtils *utils, MRCConstants *mrcconstants);
 
     // Coach loop
-    virtual void runStrategy(AgressivityLevel agressivity) = 0;
+    virtual void runStrategy(AgressivityLevel agressivity, bool param) = 0;
     virtual QString name() = 0;
 
     // Auxiliary methods
@@ -53,7 +53,7 @@ public:
 protected:
     SSLGameInfo::RefProcessedState getGameState();
     virtual void setStrategyState(AgressivityLevel gameState, StrategyState *strategyState);
-    void runStrategy(AgressivityLevel gameState, SSLGameInfo::RefProcessedState refState);
+    void runStrategy(AgressivityLevel gameState, SSLGameInfo::RefProcessedState refState, bool param);
     MRCConstants * getConstants();
 
 
