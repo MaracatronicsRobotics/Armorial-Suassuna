@@ -46,10 +46,15 @@ private:
     // run controller
     void run();
 
+    // Flags
+    bool danger;
+    bool param;
+
     // Game info
     SSLReferee *_ref;
     CoachUtils *_utils;
     MRCConstants *_mrcconstants;
+    SSLGameInfo *_gameInfo;
 
     // Teams
     MRCTeam *_ourTeam;

@@ -282,6 +282,11 @@ std::string SSLGameInfo::refTimeLeftToString(){
     return str;
 }
 
+uint32_t SSLGameInfo::refTimeLeftToUnsignedInt(){
+     uint32_t timeLeft = lastRefPack.stage_time_left()/1e6;
+     return timeLeft;
+}
+
 Referee_Point SSLGameInfo::desiredPosition(){
     return lastRefPack.designated_position();
 }

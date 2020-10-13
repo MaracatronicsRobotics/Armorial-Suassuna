@@ -38,23 +38,48 @@ void SSLStrategy_Halt::configure(int numOurPlayers) {
 }
 
 void SSLStrategy_Halt::run(int numOurPlayers) {
-    if(getParam() == 1){
-        std::cout << "dale" << std::endl;
-    }
+    if(getParam() == 0){
+        quint8 goalie = dist()->getGK();
+        if(PlayerBus::ourPlayerAvailable(goalie)){
+            _pb_defense->addPlayer(goalie);
+            _pb_defense->setGoalieId(goalie);
+        }
 
-    quint8 goalie = dist()->getGK();
-    if(PlayerBus::ourPlayerAvailable(goalie)){
-        _pb_defense->addPlayer(goalie);
-        _pb_defense->setGoalieId(goalie);
-    }
+        QList<quint8> players = dist()->getAllKNN(loc()->ourGoal());
+        int total = players.size();
+        int num_atack = (total)/2;
+        int num_def = total - num_atack;
 
-    QList<quint8> players = dist()->getAllPlayers();
+        for(int x = 0; x < players.size(); x++){
+            quint8 id = players.at(x);
+            if(num_def){
+                _pb_defense->addPlayer(id);
+                num_def--;
+            }
+            else
+                _pb_attack->addPlayer(id);
+        }
+    }else{
+        //std::cout << "atacando" << std::endl;
+        quint8 goalie = dist()->getGK();
+        if(PlayerBus::ourPlayerAvailable(goalie)){
+            _pb_defense->addPlayer(goalie);
+            _pb_defense->setGoalieId(goalie);
+        }
 
-    for(int x = 0; x < players.size(); x++){
-        quint8 id = players.at(x);
-        if(id != 1 && id != 3)
-            _pb_defense->addPlayer(id);
-        else
-            _pb_attack->addPlayer(id);
+        QList<quint8> players = dist()->getAllKNN(loc()->ourGoal());
+        int total = players.size();
+        int num_atack = (total+1)/2;
+        int num_def = total - num_atack;
+
+        for(int x = 0; x < players.size(); x++){
+            quint8 id = players.at(x);
+            if(num_def){
+                _pb_defense->addPlayer(id);
+                num_def--;
+            }
+            else
+                _pb_attack->addPlayer(id);
+        }
     }
 }

@@ -71,6 +71,7 @@ public:
     std::string refCommandToString(Referee_Command cmd);
     std::string refStageToString(Referee::Stage stage);
     std::string refTimeLeftToString();
+    uint32_t refTimeLeftToUnsignedInt();
 
     void updateGameInfo(Referee &ref);
 

@@ -37,6 +37,8 @@ Coach::Coach(SSLReferee *ref, MRCTeam *ourTeam, MRCTeam *theirTeam, MRCConstants
     _ourTeam = ourTeam;
     _theirTeam = theirTeam;
     _mrcconstants = mrcconstants;
+    danger = false;
+    param = false;
 
     // Initialize PlayerBus
     PlayerBus::initialize(ourTeam, theirTeam);
@@ -50,6 +52,9 @@ Coach::Coach(SSLReferee *ref, MRCTeam *ourTeam, MRCTeam *theirTeam, MRCConstants
 
     // null strat
     _strat = NULL;
+
+    //game info
+    _gameInfo = _ref->getGameInfo(_ourTeam->teamColor());
 }
 
 Coach::~Coach(){
@@ -236,8 +241,86 @@ void Coach::run(){
 
     // get strategy
     Strategy *strat = strategy();
-    bool param = 0;
 
+    //0 atack, 1 defesa
+    // bora descidir qual vai ser o parametro meus jovens
+    // aqui:
+    double decision;
+    //aqui entra uma porrada de pesos
+    //
+    //std::cout << "tempo: " << _gameInfo->refTimeLeftToUnsignedInt() << std::endl;
+    //std::cout << "Nossos gols: " << _gameInfo->ourTeamInfo().score() << "\n";
+    //std::cout << "Deles  gols: " << _gameInfo->theirTeamInfo().score() << "\n";
+    //std::cout << "Nossos players: " << _ourTeam->avPlayersSize() << "\n";
+    //std::cout << "Deles players: " << _theirTeam->avPlayersSize() << "\n";
+    //se for no primeiro tempo soma mais 300 no tempo
+    if(!(_gameInfo->canKickBall())){
+        double tempo = _gameInfo->refTimeLeftToUnsignedInt();
+        if(_gameInfo->stage() == Referee_Stage::Referee_Stage_NORMAL_FIRST_HALF){
+            tempo += 300;
+        }
+        int nossos_gols =_gameInfo->ourTeamInfo().score();
+        int deles_gols = _gameInfo->theirTeamInfo().score();
+        bool tamo_ganhando = (nossos_gols > deles_gols);
+        bool tamo_perdendo = (nossos_gols < deles_gols);
+        bool empatado = (nossos_gols == deles_gols);
+        double dif_gols = (double)(nossos_gols - deles_gols)/10.0;
+        double razao_qtd = (double)((double)_ourTeam->avPlayersSize() / (double)_theirTeam->avPlayersSize());
+        tempo = (double)tempo/600.0;
+        //empatado
+        if(empatado){
+            if(!danger){
+                if(razao_qtd >= 1){
+                    decision = -1;
+                }else{
+                    decision = 1;
+                }
+            }else{
+                if(razao_qtd > 1){
+                    decision = -1;
+                }else{
+                    decision = 1;
+                }
+            }
+        }
+
+        if(tamo_ganhando){
+            if(razao_qtd == 1){
+                decision = ((1/tempo)/20.0) - dif_gols;
+            }else if(razao_qtd > 1){
+                decision = -1;
+            }else{
+                decision = 1;
+            }
+        }
+
+        if(tamo_perdendo){
+            if(razao_qtd == 1){
+                if(!danger){
+                    if(dif_gols <= -0.3){
+                        danger = true;
+                        decision = 1;
+                    }else{
+                        decision = -1;
+                    }
+                }else{
+                    decision = 1;
+                }
+            }else if(razao_qtd > 1){
+                decision = -1;
+            }else{
+                decision = 1;
+            }
+        }
+        //
+        //isso tudo pra calcular decision
+        //e finalmente a gente usa decision
+        if(decision >= 0){
+            param = true;
+        }else{
+            param = false;
+        }
+    }
     // run strategy
     if(strat != NULL && getConstants()!=NULL){
         if(strat->isInitialized() == false){
