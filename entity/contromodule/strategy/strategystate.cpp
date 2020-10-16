@@ -66,12 +66,14 @@ void StrategyState::runStrategyState() {
     QList<Playbook*>::iterator it;
     // Run configurate(numOurPlayers) if num of players changed
     QHash<quint8,Player*> avPlayers = _ourTeam->avPlayers();
-    if(_lastNumOurPlayers != avPlayers.size() || !_ref->getGameInfo(_ourTeam->teamColor())->canKickBall()){
+    if(_lastNumOurPlayers != avPlayers.size() || _changed){
         _lastNumOurPlayers = avPlayers.size();
         setCurrPlaybookToOld();
         _configureEnabled = true;
         configure(_lastNumOurPlayers);
         _configureEnabled = false;
+
+        _changed = false;
     }
 
     // For each playbook, initialize (if necessary) and clear old players

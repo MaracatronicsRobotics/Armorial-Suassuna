@@ -38,7 +38,7 @@ public:
     // Called in Coach -> Strategy loop
     void runStrategyState();
     virtual QString name() = 0;
-    void setParam(bool param) { _param = param; }
+    void setParam(bool param) { _param = param; _changed = true;}
 
     // Auxiliary methods
     QList<Playbook*> getPlaybooks() { return _playbookList; }
@@ -82,6 +82,7 @@ private:
     MRCConstants *_mrcconstants;
 
     // Param
+    bool _changed;
     bool _param;
 
     // Playbook list
