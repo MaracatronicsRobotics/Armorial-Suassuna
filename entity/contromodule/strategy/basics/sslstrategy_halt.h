@@ -32,6 +32,8 @@ private:
     Playbook_Defense *_pb_defense;
     void configure(int numOurPlayers);
     void run(int numOurPlayers);
+    bool change;
+    bool state;
 public:
     SSLStrategy_Halt();
     QString name();

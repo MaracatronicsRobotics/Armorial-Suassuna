@@ -35,10 +35,39 @@ SSLStrategy_Halt::SSLStrategy_Halt() {
 void SSLStrategy_Halt::configure(int numOurPlayers) {
     usesPlaybook(_pb_defense = new Playbook_Defense());
     usesPlaybook(_pb_attack = new Playbook_Attack());
+    change = 0;
+    state = 1;
 }
 
 void SSLStrategy_Halt::run(int numOurPlayers) {
-    if(getParam() == 0){
+    quint8 goalie = dist()->getGK();
+    if(PlayerBus::ourPlayerAvailable(goalie)){
+        _pb_defense->addPlayer(goalie);
+        _pb_defense->setGoalieId(goalie);
+    }
+
+    QList<quint8> players = dist()->getAllKNN(loc()->ourGoal());
+    int total = players.size();
+    int deli = 0;
+    if(getParam() == 0)deli = 1;
+    int num_atack = (total+deli)/2;
+    int num_def = total - num_atack;
+
+    for(int x = 0; x < players.size(); x++){
+        quint8 id = players.at(x);
+        if(num_def){
+            _pb_defense->addPlayer(id);
+            num_def--;
+        }
+        else
+            _pb_attack->addPlayer(id);
+    }
+
+
+
+
+    /*if(getParam() == 1){
+        std::cout << "ieheeu\n";
         quint8 goalie = dist()->getGK();
         if(PlayerBus::ourPlayerAvailable(goalie)){
             _pb_defense->addPlayer(goalie);
@@ -60,7 +89,7 @@ void SSLStrategy_Halt::run(int numOurPlayers) {
                 _pb_attack->addPlayer(id);
         }
     }else{
-        //std::cout << "atacando" << std::endl;
+        std::cout << "atacando" << std::endl;
         quint8 goalie = dist()->getGK();
         if(PlayerBus::ourPlayerAvailable(goalie)){
             _pb_defense->addPlayer(goalie);
@@ -81,5 +110,5 @@ void SSLStrategy_Halt::run(int numOurPlayers) {
             else
                 _pb_attack->addPlayer(id);
         }
-    }
+    }*/
 }
