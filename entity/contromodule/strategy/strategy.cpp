@@ -31,6 +31,7 @@ Strategy::Strategy()
     _initialized = false;
     _dist = NULL;
     _lastStrategy = NULL;
+    lastParam = false;
 }
 
 Strategy::~Strategy(){
@@ -71,12 +72,15 @@ SSLGameInfo::RefProcessedState Strategy::getGameState(){
 void Strategy::runStrategy(AgressivityLevel gameState, SSLGameInfo::RefProcessedState refState, bool param) {
     // Get current StrategyState and run
     StrategyState *strategyState = getStrategyState(gameState);
+    lastParam = param;
     if(strategyState!=NULL && getConstants()!=NULL) {
         if(strategyState->isInitialized()==false)
             strategyState->initialize(_ourTeam, _theirTeam, _utils, _dist, &_kickerId, &_lastState, _ref, getConstants());
 
         _lastStrategy = strategyState;
-        strategyState->setParam(param);
+        if(strategyState->getParam() != lastParam){
+            strategyState->setParam(lastParam);
+        }
         strategyState->runStrategyState();
     }
 }

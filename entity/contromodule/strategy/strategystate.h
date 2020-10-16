@@ -39,6 +39,7 @@ public:
     void runStrategyState();
     virtual QString name() = 0;
     void setParam(bool param) { _param = param; _changed = true;}
+    bool getParam() { return _param; }
 
     // Auxiliary methods
     QList<Playbook*> getPlaybooks() { return _playbookList; }
@@ -59,7 +60,6 @@ protected:
     SSLReferee* ref() { return _ref; }
     Locations* loc() const;
     PlayersDistribution* dist() { return _dist; }
-    bool getParam() { return _param; }
 
     MRCConstants *getConstants();
 private:

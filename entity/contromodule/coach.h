@@ -49,6 +49,7 @@ private:
     // Flags
     bool danger;
     bool param;
+    bool alreadyChanged;
 
     // Game info
     SSLReferee *_ref;

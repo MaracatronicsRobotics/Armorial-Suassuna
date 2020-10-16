@@ -72,6 +72,9 @@ private:
     MRCTeam *_theirTeam;
     MRCConstants *_mrcconstants;
 
+    // Last param
+    bool lastParam;
+
     // Player distribution
     // here goes things like kickerId, ref last state and playerdistribution itself
     qint8 _kickerId;
